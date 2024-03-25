@@ -1,19 +1,17 @@
-import com.Gabi.*;
+import com.Gabi.Employees;
 
 import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
     public static void main(String[] args) {
-        final NumberFormat moneyFormat = NumberFormat.getCurrencyInstance();
+//        final NumberFormat moneyFormat = NumberFormat.getCurrencyInstance();
+
         int totalSalary =0;
-        Employees employee;
+        Employees employee = null;
         String text = """
         Flinstone, Fred, 1/1/1900, Programmer, {locpd=2000,yoe=10,iq=140}
         Flinstone, Fred, 1/1/1900, Programmer, {locpd=1300,yoe=14,iq=100}
@@ -32,31 +30,13 @@ public class Main {
         Flinstone, Wilma, 3/3/1910, Analyst, {projectCount=9}
         Rubble, Betty, 4/4/1915, CEO, {avgStockPrice=300}
         """;
-
-        String textRegex = "(?<lastName>\\w+),\\s*(?<firstName>\\w+),\\s*(?<dob>\\d{1,2}/\\d{1,2}/\\d{4}),\\s*(?<role>\\w+),\\s*(?<details>\\{.*\\})\\n";
-        Pattern textPat = Pattern.compile(textRegex);
-        Matcher textMat = textPat.matcher(text);
-        DateTimeFormatter dtForm = DateTimeFormatter.ofPattern("M/d/yyyy");
-
+        Matcher textMat = Employees.textPat.matcher(text);
 
         while (textMat.find()){
-            employee = switch (textMat.group("role")){
-                case "Programmer"-> new Programer(textMat.group("firstName"), textMat.group("lastName"), LocalDate.from(dtForm.parse(textMat.group("dob"))), textMat.group("details"));
-                case "Manager"-> new Manager(textMat.group("firstName"), textMat.group("lastName"), LocalDate.from(dtForm.parse(textMat.group("dob"))), textMat.group("details"));
-                case "Analyst"-> new Analyst(textMat.group("firstName"), textMat.group("lastName"), LocalDate.from(dtForm.parse(textMat.group("dob"))), textMat.group("details"));
-                case "CEO"-> new CEO(textMat.group("firstName"), textMat.group("lastName"), LocalDate.from(dtForm.parse(textMat.group("dob"))), textMat.group("details"));
-
-                default -> null;
-            };
-            if(employee != null){
-                employee.setValues();
-                System.out.println(employee.toString() + " - bonus: " + moneyFormat.format((employee.getBonus())));
-                totalSalary += employee.getSalary();
-            }
-
+            Employees.addEmployee(textMat.group());
+            totalSalary += employee.getSalary();
         }
+        System.out.println(Employees.moneyFormat.format(totalSalary));
 
-        System.out.println(moneyFormat.format(totalSalary));
-//
     }
 }
