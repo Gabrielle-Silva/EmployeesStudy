@@ -33,7 +33,9 @@ public class Main {
         Matcher textMat = Employees.textPat.matcher(text);
 
         while (textMat.find()){
-            Employees.addEmployee(textMat.group());
+            employee = Employees.addEmployee(textMat.group());
+            employee.setValues();
+            System.out.println(employee.toString() + " - bonus: " + employee.moneyFormat.format((employee.getBonus())));
             totalSalary += employee.getSalary();
         }
         System.out.println(Employees.moneyFormat.format(totalSalary));

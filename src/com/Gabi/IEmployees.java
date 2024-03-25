@@ -1,8 +1,8 @@
 package com.Gabi;
 
 public interface IEmployees {
-    static String toString();
-    static void setValues();
+    String toString();
+    void setValues();
    // void setSalary();
 
 }
